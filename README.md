@@ -33,7 +33,7 @@ SuperMario-AlgoNauts/
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/SuperMario-AlgoNauts.git
+   git clone https://github.com/abhaypratap08/SuperMario-AlgoNauts.git
    cd SuperMario-AlgoNauts
 Open the project in your preferred IDE (e.g., IntelliJ IDEA, VS Code).
 
