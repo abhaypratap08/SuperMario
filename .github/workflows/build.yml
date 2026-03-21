@@ -17,15 +17,6 @@ jobs:
           distribution: 'temurin'
       - name: Build fat JAR
         run: ./gradlew fatJar
-      - name: Copy JAR to docs for CheerpJ web play
-        run: cp build/libs/SuperMario.jar docs/SuperMario.jar
-      - name: Commit JAR to docs/
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add -f docs/SuperMario.jar
-          git diff --staged --quiet || git commit -m "Update SuperMario.jar for web play"
-          git push
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
