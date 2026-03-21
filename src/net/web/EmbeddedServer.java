@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 
 public class EmbeddedServer {
 
-    private static final int    PORT       = 80;
+    private static final int    PORT       = 8080;
     private static final int    MAX_SCORES = 20;
     private static final String DATA_FILE  = "scores.json";
 
