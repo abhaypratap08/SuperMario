@@ -8,30 +8,65 @@
     body { background: #0d1117; color: #e6edf3; font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 2rem; }
     h1 { color: #e6b422; font-size: 2rem; margin-bottom: 0.5rem; }
     p.sub { color: #8b949e; margin-bottom: 1.5rem; font-size: 0.95rem; }
-    #cheerpj-display { width: 860px; max-width: 100%; height: 600px; border: 2px solid #30363d; border-radius: 8px; background: #000; }
-    .loading { color: #8b949e; font-size: 0.9rem; margin-top: 1rem; }
+    #display { width: 860px; max-width: 100%; height: 560px; border: 2px solid #30363d; border-radius: 8px; background: #000; position: relative; }
+    #status { color: #8b949e; font-size: 0.9rem; margin-top: 1rem; text-align: center; }
     .back { margin-top: 1.5rem; color: #8b949e; font-size: 0.9rem; }
     .back a { color: #e6b422; text-decoration: none; }
+    #progress { width: 300px; height: 4px; background: #30363d; border-radius: 2px; margin: 0.5rem auto; }
+    #bar { height: 4px; background: #e6b422; border-radius: 2px; width: 0%; transition: width 0.3s; }
   </style>
-  <script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
 </head>
 <body>
   <h1>SuperMario</h1>
   <p class="sub">Running via CheerpJ — Java in your browser</p>
-  <div id="cheerpj-display"></div>
-  <p class="loading" id="status">Loading Java runtime...</p>
-  <p class="back"><a href="index.html">← Back to homepage</a> &nbsp;|&nbsp; <a href="https://github.com/abhaypratap08/SuperMario/releases/latest/download/SuperMario.jar">Download JAR</a></p>
+  <div id="display"></div>
+  <div id="progress"><div id="bar"></div></div>
+  <p id="status">Initialising Java runtime... (first load may take 30–60s)</p>
+  <p class="back"><a href="index.html">← Back</a> &nbsp;|&nbsp; <a href="SuperMario.jar" download>Download JAR instead</a></p>
+
   <script>
-    async function main() {
-      await cheerpjInit({ version: 17 });
-      document.getElementById('status').textContent = 'Starting game...';
-      cheerpjCreateDisplay(860, 600, document.getElementById('cheerpj-display'));
-      await cheerpjRunJar('/app/SuperMario.jar');
-      document.getElementById('status').textContent = '';
-    }
-    main().catch(e => {
-      document.getElementById('status').textContent = 'Could not load — try downloading the JAR instead.';
-    });
+    // CheerpJ 3 — use cheerpjInit with correct display API
+    (function() {
+      const s = document.createElement('script');
+      s.src = 'https://cjrtnc.leaningtech.com/3.0/cj3loader.js';
+      s.onload = async function() {
+        try {
+          document.getElementById('bar').style.width = '20%';
+          document.getElementById('status').textContent = 'Loading Java runtime...';
+
+          await cheerpjInit({
+            version: 17,
+            status: 'splash',
+            logCanvasUpdates: false,
+          });
+
+          document.getElementById('bar').style.width = '60%';
+          document.getElementById('status').textContent = 'Starting game...';
+
+          const display = document.getElementById('display');
+          cheerpjCreateDisplay(860, 560, display);
+
+          document.getElementById('bar').style.width = '80%';
+
+          await cheerpjRunJar('/app/SuperMario.jar');
+
+          document.getElementById('bar').style.width = '100%';
+          document.getElementById('status').textContent = '';
+          document.getElementById('progress').style.display = 'none';
+
+        } catch(e) {
+          console.error(e);
+          document.getElementById('status').innerHTML =
+            'Could not load in browser. <a href="SuperMario.jar" download style="color:#e6b422">Download the JAR</a> to play locally.';
+          document.getElementById('progress').style.display = 'none';
+        }
+      };
+      s.onerror = function() {
+        document.getElementById('status').innerHTML =
+          'CheerpJ failed to load. <a href="SuperMario.jar" download style="color:#e6b422">Download the JAR</a> to play locally.';
+      };
+      document.head.appendChild(s);
+    })();
   </script>
 </body>
 </html>
