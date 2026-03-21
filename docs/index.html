@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuperMario — AlgoNauts</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #0d1117; color: #e6edf3; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
+    h1 { font-size: 3rem; font-weight: 700; color: #e6b422; text-shadow: 0 0 40px #e6b42244; margin-bottom: 0.5rem; }
+    p.sub { color: #8b949e; margin-bottom: 2.5rem; font-size: 1.1rem; }
+    .badges { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2.5rem; }
+    .badge { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 0.4rem 0.9rem; font-size: 0.85rem; color: #8b949e; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; background: #e6b422; color: #0d1117; font-weight: 700; font-size: 1.1rem; padding: 0.85rem 2rem; border-radius: 8px; text-decoration: none; transition: background 0.2s; }
+    .btn:hover { background: #f0c842; }
+    .steps { margin-top: 3rem; background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 1.5rem 2rem; max-width: 480px; width: 100%; }
+    .steps h2 { font-size: 1rem; color: #8b949e; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .steps ol { padding-left: 1.2rem; color: #c9d1d9; line-height: 2; }
+    code { background: #0d1117; border: 1px solid #30363d; border-radius: 4px; padding: 0.1em 0.4em; font-size: 0.9em; color: #e6b422; }
+    footer { margin-top: 3rem; color: #484f58; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <h1>SuperMario</h1>
+  <p class="sub">A retro platformer by Team AlgoNauts</p>
+  <div class="badges">
+    <span class="badge">Java 17+</span>
+    <span class="badge">No install needed</span>
+    <span class="badge">Online leaderboard</span>
+    <span class="badge">Open source</span>
+  </div>
+  <a class="btn" href="play.html" style="background:#1D9E75;margin-bottom:1rem">Play in Browser</a>
+  <a class="btn" href="https://github.com/abhaypratap08/SuperMario/releases/latest/download/SuperMario.jar">
+    Download SuperMario.jar
+  </a>
+  <div class="steps">
+    <h2>How to play</h2>
+    <ol>
+      <li>Download <code>SuperMario.jar</code> above</li>
+      <li>Make sure Java 17+ is installed</li>
+      <li>Run: <code>java -jar SuperMario.jar https://supermario-production-2b84.up.railway.app</code></li>
+    </ol>
+  </div>
+  <footer>Team AlgoNauts &mdash; <a href="https://github.com/abhaypratap08/SuperMario" style="color:#8b949e">View on GitHub</a></footer>
+</body>
+</html>
