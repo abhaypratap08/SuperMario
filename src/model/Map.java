@@ -26,8 +26,10 @@ public class Map {
     private final ArrayList<Enemy> enemies = new ArrayList<>();
     private final ArrayList<Fireball> fireballs = new ArrayList<>();
 
+    private static final BufferedImage BACKGROUND = ImageImporter.loadImage("background");
+
     public Map() {
-        backgroundImage = ImageImporter.loadImage("background");
+        backgroundImage = BACKGROUND;
 
         coins = 0;
         lives = 3;
