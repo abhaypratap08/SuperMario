@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.algonauts'
+version = '1.0.0'
+
+application {
+    mainClass = 'main.Main'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
+    runtimeOnly    'com.sun.xml.bind:jaxb-impl:3.0.2'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets {
+    main {
+        java { srcDirs = ['src'] }
+        resources { srcDirs = ['res'] }
+    }
+}
+
+jar {
+    archiveFileName = 'SuperMario.jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes(
+            'Main-Class': 'main.Main',
+            'Implementation-Title': 'SuperMario-AlgoNauts',
+            'Implementation-Version': version
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+tasks.register('fatJar') {
+    dependsOn jar
+    doLast {
+        println "\n✅ Fat JAR built: build/libs/SuperMario.jar"
+        println "   Run with:  java -jar build/libs/SuperMario.jar\n"
+    }
+}
