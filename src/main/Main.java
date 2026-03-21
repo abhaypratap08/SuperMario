@@ -19,7 +19,7 @@ public class Main {
         Runtime.getRuntime().addShutdownHook(new Thread(embeddedServer::stop));
 
         try {
-            URL serverUrl = new URI("http://localhost:8080").toURL();
+            URL serverUrl = new URI("https://supermario-production-2b84.up.railway.app").toURL();
             if (args.length == 1) serverUrl = new URI(args[0]).toURL();
             new GameEngine(serverUrl);
         } catch (IllegalArgumentException | MalformedURLException | URISyntaxException ignored) {
