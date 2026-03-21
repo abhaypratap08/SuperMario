@@ -41,3 +41,7 @@ out/
 lib/
 *.class
 *.iml
+.gradle/
+build/
+scores.json
+*.class
