@@ -2,71 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Play SuperMario — AlgoNauts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Play — SuperMario AlgoNauts</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0d1117; color: #e6edf3; font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 2rem; }
+    body { font-family: system-ui, sans-serif; background: #0d1117; color: #e6edf3; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 3rem 1rem; }
     h1 { color: #e6b422; font-size: 2rem; margin-bottom: 0.5rem; }
-    p.sub { color: #8b949e; margin-bottom: 1.5rem; font-size: 0.95rem; }
-    #display { width: 860px; max-width: 100%; height: 560px; border: 2px solid #30363d; border-radius: 8px; background: #000; position: relative; }
-    #status { color: #8b949e; font-size: 0.9rem; margin-top: 1rem; text-align: center; }
-    .back { margin-top: 1.5rem; color: #8b949e; font-size: 0.9rem; }
+    p.sub { color: #8b949e; margin-bottom: 2.5rem; }
+    .steps { max-width: 520px; width: 100%; }
+    .step { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: flex-start; }
+    .num { background: #e6b422; color: #0d1117; font-weight: 700; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem; }
+    .step h3 { font-size: 1rem; margin-bottom: 0.3rem; color: #e6edf3; }
+    .step p { font-size: 0.9rem; color: #8b949e; line-height: 1.5; }
+    code { background: #0d1117; border: 1px solid #30363d; border-radius: 4px; padding: 0.15em 0.5em; font-size: 0.85em; color: #e6b422; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; background: #e6b422; color: #0d1117; font-weight: 700; font-size: 1rem; padding: 0.75rem 1.75rem; border-radius: 8px; text-decoration: none; margin: 1.5rem 0; }
+    .back { margin-top: 2rem; color: #8b949e; font-size: 0.9rem; }
     .back a { color: #e6b422; text-decoration: none; }
-    #progress { width: 300px; height: 4px; background: #30363d; border-radius: 2px; margin: 0.5rem auto; }
-    #bar { height: 4px; background: #e6b422; border-radius: 2px; width: 0%; transition: width 0.3s; }
+    .os { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .os a { background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 0.3rem 0.8rem; font-size: 0.8rem; color: #8b949e; text-decoration: none; }
+    .os a:hover { color: #e6b422; border-color: #e6b422; }
   </style>
 </head>
 <body>
-  <h1>SuperMario</h1>
-  <p class="sub">Running via CheerpJ — Java in your browser</p>
-  <div id="display"></div>
-  <div id="progress"><div id="bar"></div></div>
-  <p id="status">Initialising Java runtime... (first load may take 30–60s)</p>
-  <p class="back"><a href="index.html">← Back</a> &nbsp;|&nbsp; <a href="SuperMario.jar" download>Download JAR instead</a></p>
+  <h1>How to Play</h1>
+  <p class="sub">SuperMario — AlgoNauts runs as a desktop app (Java required)</p>
 
-  <script>
-    // CheerpJ 3 — use cheerpjInit with correct display API
-    (function() {
-      const s = document.createElement('script');
-      s.src = 'https://cjrtnc.leaningtech.com/3.0/cj3loader.js';
-      s.onload = async function() {
-        try {
-          document.getElementById('bar').style.width = '20%';
-          document.getElementById('status').textContent = 'Loading Java runtime...';
+  <a class="btn" href="SuperMario.jar" download>Download SuperMario.jar</a>
 
-          await cheerpjInit({
-            version: 17,
-            status: 'splash',
-            logCanvasUpdates: false,
-          });
+  <div class="steps">
+    <div class="step">
+      <div class="num">1</div>
+      <div>
+        <h3>Install Java 17+</h3>
+        <p>You need Java 17 or newer installed on your machine.</p>
+        <div class="os">
+          <a href="https://adoptium.net/temurin/releases/?version=17" target="_blank">Windows / Mac / Linux →</a>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div>
+        <h3>Download the JAR</h3>
+        <p>Click the button above to download <code>SuperMario.jar</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div>
+        <h3>Run it</h3>
+        <p>Open a terminal in the same folder and run:</p>
+        <p style="margin-top:0.5rem"><code>java -jar SuperMario.jar</code></p>
+        <p style="margin-top:0.4rem;font-size:0.8rem;color:#484f58">Or double-click the JAR if Java is set as the default handler.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="num">4</div>
+      <div>
+        <h3>Scores go online automatically</h3>
+        <p>Your high scores are posted to the live leaderboard shared with all players worldwide.</p>
+      </div>
+    </div>
+  </div>
 
-          document.getElementById('bar').style.width = '60%';
-          document.getElementById('status').textContent = 'Starting game...';
-
-          const display = document.getElementById('display');
-          cheerpjCreateDisplay(860, 560, display);
-
-          document.getElementById('bar').style.width = '80%';
-
-          await cheerpjRunJar('/app/SuperMario.jar');
-
-          document.getElementById('bar').style.width = '100%';
-          document.getElementById('status').textContent = '';
-          document.getElementById('progress').style.display = 'none';
-
-        } catch(e) {
-          console.error(e);
-          document.getElementById('status').innerHTML =
-            'Could not load in browser. <a href="SuperMario.jar" download style="color:#e6b422">Download the JAR</a> to play locally.';
-          document.getElementById('progress').style.display = 'none';
-        }
-      };
-      s.onerror = function() {
-        document.getElementById('status').innerHTML =
-          'CheerpJ failed to load. <a href="SuperMario.jar" download style="color:#e6b422">Download the JAR</a> to play locally.';
-      };
-      document.head.appendChild(s);
-    })();
-  </script>
+  <p class="back"><a href="index.html">← Back to homepage</a></p>
 </body>
 </html>
