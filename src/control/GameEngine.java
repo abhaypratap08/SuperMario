@@ -156,11 +156,18 @@ public class GameEngine implements Runnable {
             }
 
             // Repaint based on the ticks passed since the last iteration
-            while (delta > 0) {
+            if (delta >= 1) {
                 if (gameStatus == GameStatus.RUNNING) gameLoop();
-
                 render();
                 delta--;
+            } else {
+                // Sleep to prevent busy-waiting and reduce CPU usage
+                try {
+                    long sleepTime = (long) ((1_000_000_000 / amountOfTicks - (System.nanoTime() - now)) / 1_000_000);
+                    if (sleepTime > 0) Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    thread.interrupt();
+                }
             }
         }
     }
@@ -240,6 +247,7 @@ public class GameEngine implements Runnable {
      * Contains all the game logic and movement checks.
      */
     private void gameLoop() {
+        inputManager.pollInput();
         updateCamera();
         updateCollisions();
         updateLocations();
