@@ -19,7 +19,7 @@ java -jar build/libs/SuperMario.jar
 
 ## Windows / Mac security warning
 
-The installers are not code-signed (certificates cost ~$300/year).
+The installers are not code-signed (certificates cost 28,200 INR/year).
 
 **Windows:** Click "More info" → "Run anyway"
 **Mac:** Right-click the app → Open → Open anyway
