@@ -34,7 +34,7 @@ jobs:
             --name SuperMario \
             --app-version 1.0.0 \
             --vendor "AlgoNauts" \
-            --type deb \
+            --type app-image \
             --dest dist/
 
       - name: Package — Windows
