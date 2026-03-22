@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+    name: build (${{ matrix.os == 'ubuntu-latest' && 'linux-version' || matrix.os }})
     runs-on: ${{ matrix.os }}
 
     steps:
