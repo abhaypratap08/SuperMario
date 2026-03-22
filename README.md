@@ -16,3 +16,12 @@ cd SuperMario
 ./gradlew fatJar
 java -jar build/libs/SuperMario.jar
 ```
+
+## Windows / Mac security warning
+
+The installers are not code-signed (certificates cost ~$300/year).
+
+**Windows:** Click "More info" → "Run anyway"
+**Mac:** Right-click the app → Open → Open anyway
+
+The source code is fully open — you can verify it yourself or build from source.
