@@ -7,13 +7,11 @@ import model.enemy.Koopa;
 import model.hero.Mario;
 import net.local.Client;
 import net.local.Server;
-import net.web.WebServer;
 import utils.ImageImporter;
 import view.UIManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
 
 /**
  * The core class of the program. It's responsible for handling the
@@ -32,7 +30,6 @@ public class GameEngine implements Runnable {
     private final MapManager mapManager;
     private final SoundManager soundManager;
     private final UIManager uiManager;
-    private final WebServer webServer;
 
     private Client client;
     private Server server;
@@ -41,13 +38,12 @@ public class GameEngine implements Runnable {
     private boolean isRunning;
     private Thread thread;
 
-    public GameEngine(URL serverUrl) {
+    public GameEngine() {
         camera = new Camera();
         inputManager = new InputManager(this);
         mapManager = new MapManager();
         soundManager = new SoundManager();
         uiManager = new UIManager(this, HEIGHT, WIDTH);
-        webServer = new WebServer(serverUrl);
 
         gameStatus = GameStatus.START_SCREEN;
 
@@ -205,8 +201,6 @@ public class GameEngine implements Runnable {
                 GameEngine.playSound("flag");
 
                 calculateEndPoints();
-                if (!mapManager.getHasCheated())
-                    webServer.publishScore(mapManager.getScore());
             }
         }
 
@@ -287,18 +281,12 @@ public class GameEngine implements Runnable {
             if (input == ButtonAction.SELECTION_DOWN || input == ButtonAction.SELECTION_UP) uiManager.changeSelectedAction(input);
             if (input == ButtonAction.ENTER) uiManager.confirmSelectedAction();
             if (input == ButtonAction.ESCAPE) System.exit(0);
+        } else if (gameStatus == GameStatus.CREDITS_SCREEN) {
+            if (input == ButtonAction.ESCAPE || input == ButtonAction.ENTER) gameStatus = GameStatus.START_SCREEN;
         } else if (gameStatus == GameStatus.MULTIPLAYER_LOBBY) {
             if (input == ButtonAction.SELECTION_DOWN)
                 if (uiManager.getMultiplayerMenu().validateServerIp()) gameStatus = GameStatus.MULTIPLAYER_JOIN;
             if (input == ButtonAction.SELECTION_UP) gameStatus = GameStatus.MULTIPLAYER_HOST;
-            if (input == ButtonAction.ESCAPE) gameStatus = GameStatus.START_SCREEN;
-        } else if (gameStatus == GameStatus.LEADERBOARDS) {
-            if (input == ButtonAction.SELECTION_DOWN || input == ButtonAction.SELECTION_UP) uiManager.changeSelectedAction(input);
-            if (input == ButtonAction.ENTER || input == ButtonAction.ESCAPE) gameStatus = GameStatus.START_SCREEN;
-        } else if (gameStatus == GameStatus.CREDITS_SCREEN) {
-            if (input == ButtonAction.ENTER || input == ButtonAction.ESCAPE) gameStatus = GameStatus.START_SCREEN;
-        } else if (gameStatus == GameStatus.USERNAME_SCREEN) {
-            if (input == ButtonAction.ENTER) createMap("map-01", false);
             if (input == ButtonAction.ESCAPE) gameStatus = GameStatus.START_SCREEN;
         } else if (gameStatus == GameStatus.RUNNING) {
             if (mapManager.getMap().getEndPoint().isTouched()) return;
@@ -459,10 +447,6 @@ public class GameEngine implements Runnable {
 
     public MapManager getMapManager() {
         return mapManager;
-    }
-
-    public WebServer getWebServer() {
-        return webServer;
     }
 
     public boolean isRunning() {

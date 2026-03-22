@@ -12,7 +12,6 @@ import model.enemy.Goomba;
 import model.enemy.Koopa;
 import model.hero.Fireball;
 import model.hero.Mario;
-import net.web.Score;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -299,13 +298,7 @@ public class MapManager {
 
     /**
      * Creates a score object to be
-     * published to the leaderboard.
-     *
-     * @return The created {@link Score} object.
      */
-    public Score getScore() {
-        return new Score(username, map.getPoints());
-    }
 
     /**
      * Updates all entity/tiles locations
