@@ -1,4 +1,4 @@
-name: Build SuperMario JAR
+name: Build SuperMario
 
 on:
   push:
@@ -8,22 +8,71 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
+
       - name: Build fat JAR
         run: ./gradlew fatJar
-      - name: Upload JAR artifact
+
+      - name: Package — Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          jpackage \
+            --input build/libs \
+            --main-jar SuperMario.jar \
+            --main-class main.Main \
+            --name SuperMario \
+            --app-version 1.0.0 \
+            --vendor "AlgoNauts" \
+            --type deb \
+            --dest dist/
+
+      - name: Package — Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          jpackage `
+            --input build/libs `
+            --main-jar SuperMario.jar `
+            --main-class main.Main `
+            --name SuperMario `
+            --app-version 1.0.0 `
+            --vendor "AlgoNauts" `
+            --type exe `
+            --win-shortcut `
+            --win-menu `
+            --dest dist/
+
+      - name: Package — macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          jpackage \
+            --input build/libs \
+            --main-jar SuperMario.jar \
+            --main-class main.Main \
+            --name SuperMario \
+            --app-version 1.0.0 \
+            --vendor "AlgoNauts" \
+            --type dmg \
+            --dest dist/
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SuperMario
-          path: build/libs/SuperMario.jar
-      - name: Attach JAR to release
+          name: SuperMario-${{ matrix.os }}
+          path: dist/
+
+      - name: Attach to release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: build/libs/SuperMario.jar
+          files: dist/*
