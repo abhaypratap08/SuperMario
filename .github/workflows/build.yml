@@ -11,7 +11,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-    name: build (${{ matrix.os == 'ubuntu-latest' && 'linux-version' || matrix.os }})
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -37,8 +36,8 @@ jobs:
             --vendor "AlgoNauts" \
             --type app-image \
             --dest dist/
-          cd dist && zip -r SuperMario-Linux.zip SuperMario/
-          mv SuperMario-Linux.zip ../
+          cd dist && zip -r ../SuperMario-Linux.zip SuperMario/
+          mv ../SuperMario-Linux.zip .
 
       - name: Package — Windows
         if: matrix.os == 'windows-latest'
@@ -68,10 +67,6 @@ jobs:
             --vendor "AlgoNauts" \
             --type dmg \
             --dest dist/
-
-      - name: Collect release file — Linux
-        if: matrix.os == 'ubuntu-latest'
-        run: mv SuperMario-Linux.zip dist/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
