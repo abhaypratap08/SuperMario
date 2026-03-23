@@ -35,31 +35,9 @@ jobs:
 
       - name: Package EXE
 
-        run: |
+        shell: cmd
 
-          jpackage `
-
-            --input build/libs `
-
-            --main-jar SuperMario.jar `
-
-            --main-class main.Main `
-
-            --name SuperMario `
-
-            --app-version 1.0.0 `
-
-            --vendor "AlgoNauts" `
-
-            --type exe `
-
-            --win-shortcut `
-
-            --win-menu `
-
-            --java-options "-Xmx512m" `
-
-            --dest dist/
+        run: jpackage --input build/libs --main-jar SuperMario.jar --main-class main.Main --name SuperMario --app-version 1.0.0 --vendor "AlgoNauts" --type exe --win-shortcut --win-menu --java-options "-Xmx512m" --dest dist
 
       - name: Upload artifact
 
@@ -103,25 +81,7 @@ jobs:
 
       - name: Package DMG
 
-        run: |
-
-          jpackage \
-
-            --input build/libs \
-
-            --main-jar SuperMario.jar \
-
-            --main-class main.Main \
-
-            --name SuperMario \
-
-            --app-version 1.0.0 \
-
-            --vendor "AlgoNauts" \
-
-            --type dmg \
-
-            --dest dist/
+        run: jpackage --input build/libs --main-jar SuperMario.jar --main-class main.Main --name SuperMario --app-version 1.0.0 --vendor AlgoNauts --type dmg --dest dist
 
       - name: Upload artifact
 
@@ -169,25 +129,7 @@ jobs:
 
       - name: Package app-image
 
-        run: |
-
-          jpackage \
-
-            --input build/libs \
-
-            --main-jar SuperMario.jar \
-
-            --main-class main.Main \
-
-            --name SuperMario \
-
-            --app-version 1.0.0 \
-
-            --vendor "AlgoNauts" \
-
-            --type app-image \
-
-            --dest dist/
+        run: jpackage --input build/libs --main-jar SuperMario.jar --main-class main.Main --name SuperMario --app-version 1.0.0 --vendor AlgoNauts --type app-image --dest dist
 
       - name: Build AppImage
 
