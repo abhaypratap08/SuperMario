@@ -1,89 +1,255 @@
+
 name: Build SuperMario
+
 on:
+
   push:
+
     branches: [ main ]
+
   release:
+
     types: [ created ]
+
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+
+  build-windows:
+
+    runs-on: windows-latest
+
     steps:
+
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
+
         with:
+
           java-version: '21'
+
           distribution: 'temurin'
-      - name: Build fat JAR
+
+      - name: Build JAR
+
         run: ./gradlew fatJar
-      - name: Package — Linux AppImage
-        if: matrix.os == 'ubuntu-latest'
+
+      - name: Package EXE
+
         run: |
-          jpackage \
-            --input build/libs \
-            --main-jar SuperMario.jar \
-            --main-class main.Main \
-            --name SuperMario \
-            --app-version 1.0.0 \
-            --vendor "AlgoNauts" \
-            --type app-image \
-            --dest dist/
-          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
-          chmod +x /tmp/appimagetool
-          mkdir -p AppDir
-          cp -r dist/SuperMario/* AppDir/
-          cat > AppDir/SuperMario.desktop << 'DESKTOP'
-[Desktop Entry]
-Name=SuperMario
-Exec=SuperMario
-Icon=SuperMario
-Type=Application
-Categories=Game;
-DESKTOP
-          cat > AppDir/AppRun << 'APPRUN'
-#!/bin/bash
-HERE="$(dirname "$(readlink -f "${0}")")"
-exec "$HERE/bin/SuperMario" "$@"
-APPRUN
-          chmod +x AppDir/AppRun
-          cp dist/SuperMario/.DirIcon AppDir/SuperMario.png 2>/dev/null || true
-          ARCH=x86_64 /tmp/appimagetool AppDir dist/SuperMario-x86_64.AppImage
-      - name: Package — Windows
-        if: matrix.os == 'windows-latest'
-        run: |
+
           jpackage `
+
             --input build/libs `
+
             --main-jar SuperMario.jar `
+
             --main-class main.Main `
+
             --name SuperMario `
+
             --app-version 1.0.0 `
+
             --vendor "AlgoNauts" `
+
             --type exe `
+
             --win-shortcut `
+
             --win-menu `
+
             --java-options "-Xmx512m" `
+
             --dest dist/
-      - name: Package — macOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          jpackage \
-            --input build/libs \
-            --main-jar SuperMario.jar \
-            --main-class main.Main \
-            --name SuperMario \
-            --app-version 1.0.0 \
-            --vendor "AlgoNauts" \
-            --type dmg \
-            --dest dist/
+
       - name: Upload artifact
+
         uses: actions/upload-artifact@v4
+
         with:
-          name: SuperMario-${{ matrix.os }}
-          path: dist/
+
+          name: SuperMario-windows
+
+          path: dist/SuperMario-1.0.0.exe
+
       - name: Attach to release
+
         if: github.event_name == 'release'
+
         uses: softprops/action-gh-release@v2
+
         with:
-          files: dist/*
+
+          files: dist/SuperMario-1.0.0.exe
+
+  build-mac:
+
+    runs-on: macos-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+
+        with:
+
+          java-version: '21'
+
+          distribution: 'temurin'
+
+      - name: Build JAR
+
+        run: ./gradlew fatJar
+
+      - name: Package DMG
+
+        run: |
+
+          jpackage \
+
+            --input build/libs \
+
+            --main-jar SuperMario.jar \
+
+            --main-class main.Main \
+
+            --name SuperMario \
+
+            --app-version 1.0.0 \
+
+            --vendor "AlgoNauts" \
+
+            --type dmg \
+
+            --dest dist/
+
+      - name: Upload artifact
+
+        uses: actions/upload-artifact@v4
+
+        with:
+
+          name: SuperMario-mac
+
+          path: dist/SuperMario-1.0.0.dmg
+
+      - name: Attach to release
+
+        if: github.event_name == 'release'
+
+        uses: softprops/action-gh-release@v2
+
+        with:
+
+          files: dist/SuperMario-1.0.0.dmg
+
+  build-linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+
+        with:
+
+          java-version: '21'
+
+          distribution: 'temurin'
+
+      - name: Build JAR
+
+        run: ./gradlew fatJar
+
+      - name: Install dependencies
+
+        run: sudo apt-get install -y libfuse2
+
+      - name: Package app-image
+
+        run: |
+
+          jpackage \
+
+            --input build/libs \
+
+            --main-jar SuperMario.jar \
+
+            --main-class main.Main \
+
+            --name SuperMario \
+
+            --app-version 1.0.0 \
+
+            --vendor "AlgoNauts" \
+
+            --type app-image \
+
+            --dest dist/
+
+      - name: Build AppImage
+
+        run: |
+
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
+
+          chmod +x /tmp/appimagetool
+
+          mkdir -p AppDir
+
+          cp -r dist/SuperMario/* AppDir/
+
+          cat > AppDir/SuperMario.desktop << 'DESKTOP'
+
+[Desktop Entry]
+
+Name=SuperMario
+
+Exec=SuperMario
+
+Icon=SuperMario
+
+Type=Application
+
+Categories=Game;
+
+DESKTOP
+
+          cat > AppDir/AppRun << 'APPRUN'
+
+#!/bin/bash
+
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+exec "$HERE/bin/SuperMario" "$@"
+
+APPRUN
+
+          chmod +x AppDir/AppRun
+
+          cp dist/SuperMario/.DirIcon AppDir/SuperMario.png 2>/dev/null || true
+
+          ARCH=x86_64 /tmp/appimagetool AppDir dist/SuperMario.AppImage
+
+      - name: Upload artifact
+
+        uses: actions/upload-artifact@v4
+
+        with:
+
+          name: SuperMario-linux
+
+          path: dist/SuperMario.AppImage
+
+      - name: Attach to release
+
+        if: github.event_name == 'release'
+
+        uses: softprops/action-gh-release@v2
+
+        with:
+
+          files: dist/SuperMario.AppImage
+
