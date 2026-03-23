@@ -53,10 +53,6 @@ jobs:
             --type exe `
             --win-shortcut `
             --win-menu `
-            --java-options "-Dsun.java2d.d3d=true" `
-            --java-options "-Dsun.java2d.ddscale=true" `
-            --java-options "-Dsun.java2d.ddforcevram=true" `
-            --java-options "-Xms128m" `
             --java-options "-Xmx512m" `
             --dest dist/
 
