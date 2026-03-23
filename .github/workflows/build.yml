@@ -1,121 +1,233 @@
+
 name: Build SuperMario
 
 on:
+
   push:
+
     branches: [ main ]
+
   release:
+
     types: [ created ]
 
 jobs:
 
   build-windows:
+
     runs-on: windows-latest
+
     steps:
+
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
+
         with:
+
           java-version: '21'
+
           distribution: 'temurin'
+
       - name: Build JAR
+
         run: ./gradlew fatJar
+
       - name: Package EXE
+
         run: |
+
           jpackage `
+
             --input build/libs `
+
             --main-jar SuperMario.jar `
+
             --main-class main.Main `
+
             --name SuperMario `
+
             --app-version 1.0.0 `
+
             --vendor "AlgoNauts" `
+
             --type exe `
+
             --win-shortcut `
+
             --win-menu `
+
             --java-options "-Xmx512m" `
+
             --dest dist/
+
       - name: Upload artifact
+
         uses: actions/upload-artifact@v4
+
         with:
+
           name: SuperMario-windows
+
           path: dist/SuperMario-1.0.0.exe
+
       - name: Attach to release
+
         if: github.event_name == 'release'
+
         uses: softprops/action-gh-release@v2
+
         with:
+
           files: dist/SuperMario-1.0.0.exe
 
   build-mac:
+
     runs-on: macos-latest
+
     steps:
+
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
+
         with:
+
           java-version: '21'
+
           distribution: 'temurin'
+
       - name: Build JAR
+
         run: ./gradlew fatJar
+
       - name: Package DMG
+
         run: |
+
           jpackage \
+
             --input build/libs \
+
             --main-jar SuperMario.jar \
+
             --main-class main.Main \
+
             --name SuperMario \
+
             --app-version 1.0.0 \
+
             --vendor "AlgoNauts" \
+
             --type dmg \
+
             --dest dist/
+
       - name: Upload artifact
+
         uses: actions/upload-artifact@v4
+
         with:
+
           name: SuperMario-mac
+
           path: dist/SuperMario-1.0.0.dmg
+
       - name: Attach to release
+
         if: github.event_name == 'release'
+
         uses: softprops/action-gh-release@v2
+
         with:
+
           files: dist/SuperMario-1.0.0.dmg
 
   build-linux:
+
     runs-on: ubuntu-latest
+
     steps:
+
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
+
         with:
+
           java-version: '21'
+
           distribution: 'temurin'
+
       - name: Build JAR
+
         run: ./gradlew fatJar
+
       - name: Install dependencies
-        run: sudo apt-get install -y libfuse2
+
+        run: sudo apt-get install -y libfuse2 imagemagick
+
       - name: Package app-image
+
         run: |
+
           jpackage \
+
             --input build/libs \
+
             --main-jar SuperMario.jar \
+
             --main-class main.Main \
+
             --name SuperMario \
+
             --app-version 1.0.0 \
+
             --vendor "AlgoNauts" \
+
             --type app-image \
+
             --dest dist/
+
       - name: Build AppImage
+
         run: |
+
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
+
           chmod +x /tmp/appimagetool
+
           mkdir -p AppDir
+
           cp -r dist/SuperMario/* AppDir/
+
+          convert src/media/logo.png -resize 256x256 AppDir/SuperMario.png
+
           printf '[Desktop Entry]\nName=SuperMario\nExec=SuperMario\nIcon=SuperMario\nType=Application\nCategories=Game;\n' > AppDir/SuperMario.desktop
+
           printf '#!/bin/bash\nHERE="$(dirname "$(readlink -f "${0}")")"\nexec "$HERE/bin/SuperMario" "$@"\n' > AppDir/AppRun
+
           chmod +x AppDir/AppRun
-          cp dist/SuperMario/.DirIcon AppDir/SuperMario.png 2>/dev/null || true
+
           ARCH=x86_64 /tmp/appimagetool AppDir dist/SuperMario.AppImage
+
       - name: Upload artifact
+
         uses: actions/upload-artifact@v4
+
         with:
+
           name: SuperMario-linux
+
           path: dist/SuperMario.AppImage
+
       - name: Attach to release
+
         if: github.event_name == 'release'
+
         uses: softprops/action-gh-release@v2
+
         with:
+
           files: dist/SuperMario.AppImage
+
